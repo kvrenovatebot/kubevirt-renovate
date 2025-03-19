@@ -1,57 +1,46 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "onboarding": false,
+  "requireConfig": "optional",
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "baseBranches": [
+      "main",
+      "release-1.5",
+      "release-1.4",
+      "release-1.3",
+      "release-1.2"
+  ],
+  "postUpdateOptions": ["gomodTidy"],
+  "labels": ["release-note-none"],
+  "extends": [":gitSignOff"],
+  "enabledManagers": ["gomod"],
+  "ignorePaths": [
+      "staging"
+  ],
+  "excludeCommitPaths": [
+      "vendor/github.com/golang/glog/**",
+      "vendor/kubevirt.io/api/**",
+      "vendor/kubevirt.io/client-go/**"
+  ],
+  "postUpgradeTasks": {
+        "commands": [
+            "KUBEVIRT_RUN_UNNESTED=true make deps-update"
+        ],
+        "executionMode": "branch"
+  },
+  "packageRules": [
     {
-      "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-      "onboarding": false,
-      "requireConfig": "optional",
-      "prConcurrentLimit": 1,
-      "prHourlyLimit": 1,
-      "baseBranches": [
-          "main"
-      ],
-      "postUpdateOptions": ["gomodTidy"],
-      "labels": ["release-note-none"],
-      "extends": [":gitSignOff"],
-      "enabledManagers": ["gomod"],
-      "ignorePaths": [
-          "staging"
-      ],
-      "excludeCommitPaths": [
-          "vendor/github.com/golang/glog/**",
-          "vendor/kubevirt.io/api/**",
-          "vendor/kubevirt.io/client-go/**"
-      ],
-      "postUpgradeTasks": {
-            "commands": [
-                "KUBEVIRT_RUN_UNNESTED=true make deps-update"
-            ],
-            "executionMode": "branch"
-      },
-      "packageRules": [
-        {
-          "enabled": false,
-          "matchPackagePatterns": ["*"]
-        }, {
-          "matchPackageNames": ["golang"],
-          "allowedVersions": "<=1.22",
-          "matchBaseBranches": ["release-1.4", "release-1.3"]
-        }, {
-        }, {
-          "matchPackageNames": ["golang"],
-          "allowedVersions": "<=1.21",
-          "matchBaseBranches": ["release-1.2"]
-        }, {
-          "matchPackageNames": ["golang"],
-          "allowedVersions": "<=1.20",
-          "matchBaseBranches": ["release-1.1", "release-1.0"]
-        }, {
-          "matchPackageNames": ["golang"],
-          "allowedVersions": "<=1.19",
-          "matchBaseBranches": ["release-0.58"]
-        }
-
-      ],
-      "vulnerabilityAlerts": {
-        "enabled": true
-      },
-      "osvVulnerabilityAlerts": true,
-      "assigneesFromCodeOwners": true
+      "enabled": false,
+      "matchPackagePatterns": ["*"]
     }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true
+  },
+  "osvVulnerabilityAlerts": true,
+  "assigneesFromCodeOwners": true,
+  "prBodyNotes": [
+      "### Release note\n```release-note\nUpdate dependecy {{depName}} to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}\n```\n"
+  ]
+}
